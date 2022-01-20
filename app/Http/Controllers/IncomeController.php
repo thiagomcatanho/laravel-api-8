@@ -183,9 +183,9 @@ class IncomeController extends BaseController
         return [
             'customer_id' => ['required', 'numeric'],
             'description' => ['string', 'required', 'max:255'],
-            'amount' => ['numeric'],
-            'income_date' => ['string'],
-            'tax_year' => ['string'],
+            'amount' => ['numeric', 'required'],
+            'income_date' => ['string', 'required'],
+            'tax_year' => ['string', 'required'],
             'income_file' => ['file', 'mimes:jpg,bmp,png,pdf']
         ];
     }

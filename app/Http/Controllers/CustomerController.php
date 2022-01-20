@@ -113,7 +113,7 @@ class CustomerController extends BaseController
                 return $this->sendError('Customer not found.'); 
             endif;
 
-            $validator = Validator::make($input, $this->rules(), $this->fields());
+            $validator = Validator::make($input, $this->rules($customer->id), $this->fields());
 
             if($validator->fails()):
                 return $this->sendError('Validation Error.', $validator->errors(), 400);   
