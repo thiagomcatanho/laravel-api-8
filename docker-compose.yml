@@ -1,0 +1,58 @@
+services:
+    # image project
+    laravel_api:
+        build: 
+            args: 
+                user: thiago
+                uid: 1000
+            context: ./
+            dockerfile: Dockerfile
+        image: laravel-api-project
+        restart: unless-stopped
+        working_dir: /var/www/
+        volumes:
+            - ./:/var/www
+        depends_on: 
+            - redis
+            - queue
+        networks: 
+            - laravel_api
+    
+    # nginx
+    nginx:
+        image: nginx:alpine
+        restart: unless-stopped
+        ports: 
+            - 8081:80
+        volumes: 
+            - ./:/var/www
+            - ./docker/nginx/:/etc/nginx/conf.d/
+        networks: 
+            - laravel_api
+
+    # queue
+    queue:
+        build: 
+            args: 
+                user: thiago
+                uid: 1000
+            context: ./
+            dockerfile: Dockerfile
+        restart: unless-stopped
+        command: "php artisan queue:work"
+        volumes: 
+            - ./:/var/www
+        depends_on: 
+            - redis
+        networks: 
+            - laravel_api
+
+    # redis
+    redis:
+        image: redis:latest
+        networks: 
+            - laravel_api
+
+networks: 
+    laravel_api:
+        driver: bridge
